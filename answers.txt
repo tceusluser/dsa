@@ -1,0 +1,373 @@
+class Stack {
+    private int maxSize;
+    private int[] stackArray;
+    private int top;
+
+    public Stack(int size) {
+
+        maxSize = size;
+        stackArray = new int[maxSize];
+        top = -1;
+
+    }
+
+    // check is empty
+
+    public boolean isEmpty() {
+        return top == -1;
+    }
+
+    // check is full
+
+    public boolean isFull() {
+        return top == maxSize - 1;
+
+    }
+
+    // method to push element to the stack
+    public void push(int value) {
+        if (isFull() == true) {
+            System.out.println(" stack is full ");
+        } else {
+            stackArray[++top] = value;
+            System.out.println("pushed " + value + "   to the stack");
+
+        }
+
+    }
+
+    // pop an element from the stack
+    public int pop() {
+
+        if (isEmpty() == true) {
+            System.out.println(" stack is empty Cannot pop");
+            return -1;
+
+        }
+
+        else {
+            return stackArray[top--];
+        }
+
+    }
+
+    public void printStack() {
+        System.out.print("Stack Elements:");
+        for (int i = 0; i <= top; i++) {
+            System.out.print(stackArray[i] + " ");
+        }
+        System.out.println();
+    }
+
+
+
+
+   // peek element 
+    public int peek() {
+        if (isEmpty()) {
+            System.out.println("Stack is empty. Cannot peek.");
+            return -1;
+        } else {
+            return stackArray[top];
+        }
+    }
+
+    public void sortStack() {
+        Stack tempStack = new Stack(maxSize);
+        while (!isEmpty()) {
+            int current = pop();
+            while (!tempStack.isEmpty() && tempStack.peek() > current) {
+                push(tempStack.pop());
+            }
+            tempStack.push(current);
+        }
+        // Transfer sorted elements back to the original stack
+        while (!tempStack.isEmpty()) {
+            push(tempStack.pop());
+        }
+    }
+
+
+    //check palindrome 
+
+    public boolean isPalindrome() {
+        Stack tempStack = new Stack(maxSize) ;
+        int [] tempArray = new int [top +1] ; 
+
+        for (int i = 0 ; i <= top ; i++)  {
+            int value = stackArray[i] ; 
+
+                tempArray[i] = value ; 
+                tempStack.push(value);
+
+        }
+
+        for (int i = 0 ; i<=top ; i++){
+            if (tempArray[i] != tempStack.pop()) {
+                return false ; 
+
+            }              
+
+        }
+        return true ;
+
+    }
+
+}
+
+ class stackExample {
+
+    public static void main(String[] args) {
+
+        Stack stack1 = new Stack(7);
+
+        stack1.push(1);
+        stack1.push(3);
+        stack1.push(5);
+        stack1.push(2);
+        stack1.push(5);
+        stack1.push(3);
+        stack1.push(1);
+
+        stack1.printStack();
+       //stack1.sortStack() ; 
+      //  stack1.printStack();
+        System.out.println(" is Palindrom " + stack1.isPalindrome() );
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+class MakeNode {
+    int value;
+    MakeNode next;
+    MakeNode prev;
+
+    MakeNode(int value) {
+        this.value = value;
+        this.next = null;
+        this.prev = null;
+
+    }
+}
+
+public class DoublyList {
+
+    MakeNode head;
+    MakeNode tail;
+
+    DoublyList() {
+        this.head = null;
+        this.tail = null;
+
+    }
+
+    public static void main(String[] args) {
+
+        DoublyList list = new DoublyList();
+
+        list.head = new MakeNode(9);
+        list.head.next = new MakeNode(8);
+        list.head.next.prev = list.head;
+        list.head.next.next = new MakeNode(7);
+        list.head.next.next.prev = list.head.next ;
+        list.head.next.next.next = new MakeNode(6);
+        list.head.next.next.next.prev = list.head.next.next; 
+        list.tail = list.head.next.next.next;
+
+        System.out.println(" ");
+        //list.addFront(10);
+        //list.addEnd(5);
+
+        list.printList(list.head);
+        System.out.println(" ");
+
+        list.addAfter(9,10);
+
+        list.deleteNode(8);
+        list.printList(list.head);
+        System.out.println(" ");
+
+        list.printReverse(list.tail) ;
+
+    }
+
+    // print list from head to tail
+    public void printList(MakeNode head) {
+
+        MakeNode current = head;
+
+        while (current != null) {
+            System.out.print(current.value + "<=>");
+            current = current.next;
+        }
+
+    }
+
+    // print tail to head 
+    public void printReverse (MakeNode tail) {
+        MakeNode current = tail ;
+
+        while (current != null ) {
+            System.out.print( current.value + "<=>");
+            current = current.prev  ;
+        }
+        System.out.println(" ");
+    }
+   
+    // add front
+    public void addFront(int value) {
+        MakeNode newNode = new MakeNode(value);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+        }
+    }
+
+    // add end
+    public void addEnd(int value) {
+        MakeNode newNode = new MakeNode(value);
+
+        if (head == null) {
+
+            head = newNode;
+            tail = newNode;
+
+        } else {
+
+            tail.next = newNode;
+            newNode.prev = tail;
+
+        }
+    }
+
+    // add afer 
+     
+    public void addAfter(int afterValue, int value) {
+        MakeNode current = head;
+        while (current != null && current.value != afterValue) {
+            current = current.next;
+        }
+        if (current != null) {
+            MakeNode newNode = new MakeNode(value);
+            newNode.next = current.next;
+            newNode.prev = current;
+            if (current.next != null) {
+                current.next.prev = newNode;
+            }
+            current.next = newNode;
+            if (current == tail) {
+                tail = newNode;
+            }
+        }
+    }
+
+    // delete front
+    //delet after 
+
+    //delete given 
+
+    public void deleteNode (int target ) {
+
+                MakeNode current = head ; 
+
+                while (current != null && current.value != target ) {
+                    current = current.next ;
+
+
+                }
+
+                if (current != null ) {
+                    if (current.prev !=  null ) {
+
+                        current.prev.next = current.next ;
+                    } else {
+                        head = current.next ;
+                    }
+
+                    if (current.next!= null) {
+                        current.next.prev = current.prev;
+                    }else {
+                        tail = current.prev ;
+                    }
+                }
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
